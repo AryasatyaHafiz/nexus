@@ -2,12 +2,14 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext"; // pakai context auth
 
 export function AppLayout() {
   const navigate = useNavigate();
+  const { signOut, user } = useAuth();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // hapus token
+  const handleLogout = async () => {
+    await signOut(); // keluarin session Supabase
     navigate("/login"); // redirect ke login page
   };
 
@@ -22,9 +24,9 @@ export function AppLayout() {
 
             <div className="flex items-center gap-4">
               <div className="text-sm text-muted-foreground">
-                Welcome back to ProductFlow
+                {user ? `Welcome back, ${user.email}` : "Welcome to ProductFlow"}
               </div>
-              
+
               <Button
                 variant="outline"
                 size="sm"
